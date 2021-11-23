@@ -15,7 +15,9 @@ Feel free to change anything in the project!
 ## Getting Started
 
 PyCharm (https://www.jetbrains.com/pycharm/) is our preferred IDE but you can use any environment you like.
+
 Creating a virtual environment (https://www.jetbrains.com/help/pycharm/creating-virtual-environment.html), installing the requirements.txt file (pip install -r requirements.txt) and running app.py should be all you need to get started.
+
 If you have any problems or queries you can raise an issue ticket here - https://github.com/elancapital/elantech-placement-2022/issues
 
 ## How To Apply
