@@ -23,7 +23,7 @@ If you have any problems or queries you can raise an issue ticket here - https:/
 ## How To Apply
 
 1. Fork the Project
-2. Create your Feature Branch (`git checkout -b MyAwesomeVersion`)
+2. Create your Feature Branch (`git checkout -b MyAwesomeVersion` or use [GitHub Desktop](https://desktop.github.com))
 3. Commit your Changes (`git commit -m 'Add some awesome changes'`)
 4. Push to the Branch (`git push origin MyAwesomeVersion`)
 5. Email us with a link to your repo and your CV
