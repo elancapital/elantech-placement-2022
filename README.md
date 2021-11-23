@@ -21,6 +21,6 @@ Feel free to change anything in the project!
 5. Email us with a link to your repo and your CV
 
 ## Some Helpful Links
-https://realpython.com/python-dash/
-https://dash.plotly.com/
-https://pandas-datareader.readthedocs.io/en/latest/
+- https://realpython.com/python-dash/
+- https://dash.plotly.com/
+- https://pandas-datareader.readthedocs.io/en/latest/
