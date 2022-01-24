@@ -100,10 +100,7 @@ fig_consumer_confidence_vehicle_sales = {
         )
     ),
 }
-
-# Merge
-merged_vehicles_employees = pd.merge(total_vehicle_sales, retail_employees, on='date')[['date','total_vehicle_sales', 'retail_employees',]]
-merged_confidence_levels = pd.merge(consumer_confidence_level_US, business_confidence_level, on='date')[['date','consumer_confidence_level', 'business_confidence_level',]]
+# Heatmap
 merged_confidence_vehicle_employee = pd.merge(pd.merge(pd.merge(consumer_confidence_level_US, business_confidence_level, on='date'),total_vehicle_sales, how='right', on='date'), retail_employees, how='right', on='date')[['date','consumer_confidence_level', 'business_confidence_level','total_vehicle_sales', 'retail_employees',]]
 corr_vehicles_employees = merged_confidence_vehicle_employee.corr()
 fig_heatmap_vehicles_employees = figure_factory.create_annotated_heatmap(
@@ -143,7 +140,7 @@ fig_business_confidence_covid19 = {
         )
     ),
 }
-# Heatmap
+# Heatmap 2
 merged = pd.merge(pd.merge(pd.merge(crude_oil, retail_employees, on='date'), total_vehicle_sales, on='date'),
                   natural_gas, on='date')[['date','crude_oil', 'natural_gas', 'total_vehicle_sales', 'retail_employees',]]
 corr = merged.corr()
