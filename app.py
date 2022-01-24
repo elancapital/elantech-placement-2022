@@ -29,12 +29,12 @@ business_confidence_level['date'] = business_confidence_level['date'].astype('da
 trace_crude_oil = go.Scatter(
     x=crude_oil["date"],
     y=crude_oil["crude_oil"],
-    name='Daily Crude Oil Price in $'
+    name='Crude Oil Price, daily'
 )
 trace_natural_gas = go.Scatter(
     x=natural_gas["date"],
     y=natural_gas["natural_gas"],
-    name='Daily Natural Gas Price in $',
+    name='Natural Gas Price, daily',
     yaxis='y2'
 )
 fig_crude_oil_natural_gas = {
@@ -42,7 +42,7 @@ fig_crude_oil_natural_gas = {
         trace_crude_oil, trace_natural_gas
     ],
     'layout': go.Layout(
-        title='Daily crude oil and natural gas prices',
+        title='Crude oil and natural gas prices, daily.',
         yaxis=dict(
             title='Crude oil',
             titlefont=dict(color='#1f77b4'),
@@ -78,7 +78,7 @@ fig_consumer_confidence_vehicle_sales = {
         trace_consumer_confidence, trace_vehicle_sales, trace_retail_employees
     ],
     'layout': go.Layout(
-        title='Vehicle sales and consumer confidence',
+        title='Vehicle sales and consumer confidence.',
         yaxis=dict(
             title='Consumer confidence level',
             titlefont=dict(color='#1f77b4'),
@@ -86,17 +86,22 @@ fig_consumer_confidence_vehicle_sales = {
         yaxis2=dict(
             title='Total Vehicle Sales',
             titlefont=dict(color='#ff7f0e'),
+            anchor='x',
             overlaying='y',
             side='right'
         ),
         yaxis3=dict(
             title='Daily Retail Employees',
-            # titlefont=dict(color='#ff7f0e'),
+            titlefont=dict(color='#2ca02c'),
+            anchor="free",
             overlaying='y',
-            side='right'
+            side='right',
+            position=0.95,
         )
     ),
 }
+
+# Merge
 merged_vehicles_employees = pd.merge(total_vehicle_sales, retail_employees, on='date')[['date','total_vehicle_sales', 'retail_employees',]]
 merged_confidence_levels = pd.merge(consumer_confidence_level_US, business_confidence_level, on='date')[['date','consumer_confidence_level', 'business_confidence_level',]]
 merged_confidence_vehicle_employee = pd.merge(pd.merge(pd.merge(consumer_confidence_level_US, business_confidence_level, on='date'),total_vehicle_sales, how='right', on='date'), retail_employees, how='right', on='date')[['date','consumer_confidence_level', 'business_confidence_level','total_vehicle_sales', 'retail_employees',]]
@@ -106,32 +111,32 @@ fig_heatmap_vehicles_employees = figure_factory.create_annotated_heatmap(
     x=corr_vehicles_employees.index.tolist(),
     y=corr_vehicles_employees.index.tolist(),
     annotation_text=corr_vehicles_employees.values.tolist(),
-    colorscale='tealgrn_r'
+    colorscale='tealgrn'
 )
 # Business confidence level and covid-19 cases
-trace_business_confidence = go.Scatter(
-    x=business_confidence_level["date"][144::],
-    y=business_confidence_level["business_confidence_level"][144::],
-    name='Business Confidence Level USA'
+trace_total_covid19_cases = go.Scatter(
+    x=covid_cases_US["date"],
+    y=covid_cases_US["total_cases"],
+    name='Total Covid-19 cases USA'
 )
 trace_covid19_cases = go.Scatter(
     x=covid_cases_US["date"],
     y=covid_cases_US["new_cases"],
-    name='Covid-19 cases USA',
+    name='New Covid-19 cases USA',
     yaxis='y2'
 )
 fig_business_confidence_covid19 = {
     'data': [
-        trace_business_confidence, trace_covid19_cases
+        trace_total_covid19_cases, trace_covid19_cases
     ],
     'layout': go.Layout(
-        title='Business confidence and covid19',
+        title='Covid19 cases USA.',
         yaxis=dict(
-            title='Business confidence level',
+            title='total covid19 cases',
             titlefont=dict(color='#1f77b4'),
         ),
         yaxis2=dict(
-            title='Covid',
+            title='New Covid19 cases',
             titlefont=dict(color='#ff7f0e'),
             overlaying='y',
             side='right'
@@ -144,17 +149,6 @@ merged = pd.merge(pd.merge(pd.merge(crude_oil, retail_employees, on='date'), tot
 corr = merged.corr()
 fig_heatmap = figure_factory.create_annotated_heatmap(corr.values, x=corr.index.tolist(), y=corr.index.tolist(),
                                               annotation_text=corr.values.tolist(),  colorscale='tealgrn_r')
-# Covid Cases US
-fig_covid_cases_US = {
-    "data": [
-        {
-            "x": covid_cases_US["date"],
-            "y": covid_cases_US["new_cases"],
-            "type": "lines",
-        },
-    ],
-    "layout": {"title": "Daily New Covid-19 Cases USA"},
-}
 
 # Build visualisaton
 app = dash.Dash(__name__)
@@ -176,7 +170,7 @@ app.layout = html.Div(
         ),
         # Subheading
         html.Div(
-            "How did the economy react to the covid-19 pandemic",
+            "How did the economy react to the covid-19 pandemic.",
             style={
                 'textAlign': 'center',
                 'color': colors['text']
@@ -189,18 +183,35 @@ app.layout = html.Div(
         dcc.Graph(
             figure=fig_consumer_confidence_vehicle_sales
         ),
+        
+        html.Div(
+            "Heatmap: correlation between confidence levels, vehicle sales and retail employees.",
+            style={
+                'textAlign': 'center',
+            }
+            ),
+        
         dcc.Graph(
             figure=fig_heatmap_vehicles_employees
         ),
         dcc.Graph(
             figure=fig_business_confidence_covid19
         ),
+        html.Div(
+            "Heatmap: correlation between crude oil prices, natural gas prices, total vehicle sales and daily retail employees.",
+            style={
+                'textAlign': 'center',
+            }
+            ),
         dcc.Graph(
             figure=fig_heatmap
         ),
-        dcc.Graph(
-            figure=fig_covid_cases_US
-        ),
+        html.Div(
+            "Number of retail employees for every month.",
+            style={
+                'textAlign': 'center',
+            }
+            ),
         # Table
         dash_table.DataTable(
             columns=[{"name": i, "id": i} for i in retail_employees.columns],
